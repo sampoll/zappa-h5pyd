@@ -1,0 +1,27 @@
+# Launch h5serv server (The HDF5 server) in EC2 console.
+
+# Set up virtual environment 
+python3 -m venv venv
+source venv/bin/activate
+python -V    # 3.6.5
+pip -V       # 9.0.3
+
+pip install flask flask-restplus zappa h5pyd
+export FLASK_APP=app.py    
+
+# Set up zappa
+zappa init    # accept all defaults
+zappa deploy dev
+
+# Run on localhost to get correct request
+# http://localhost:5000/path/grp2
+# http://localhost:5000/data?path=grp2%2Fgrp2b%2Fdata3&elements=3%2C2%2C1
+
+# now try running on remote zappa server and enter request in browser
+https://dg0j65xf7c.execute-api.us-east-1.amazonaws.com/dev/path/grp2   # works
+https://dg0j65xf7c.execute-api.us-east-1.amazonaws.com/dev/data?path=grp2%2Fgrp2b%2Fdata3&elements=3%2C2%2C1  # works too
+
+# Shut down
+zappa undeploy
+
+# Shut down h5serv server in EC2 console.
